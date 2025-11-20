@@ -12,7 +12,7 @@ public class SQLiteJDBC {
         try {
             connection = DriverManager.getConnection(SQLUtils.CONNECTION_URL);
 
-            initDatabase();
+            setupDatabase();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -97,7 +97,7 @@ public class SQLiteJDBC {
         return permissions;
     }
 
-    public void initDatabase() {
+    public void setupDatabase() {
         try {
             int changedRows = 0;
 
@@ -115,7 +115,7 @@ public class SQLiteJDBC {
             statement.close();
 
             if(changedRows > 0) {
-                System.out.println("Database init successful! Rows changed: " + changedRows);
+                System.out.println("Database setup successful! Rows changed: " + changedRows);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

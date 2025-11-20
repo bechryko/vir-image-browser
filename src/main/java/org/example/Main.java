@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.services.UserService;
 import org.example.ui.Login;
 import javax.swing.*;
 import java.awt.*;
@@ -9,13 +10,14 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 public class Main {
 
     public static void main() {
+        UserService userService = new UserService();
 
         JFrame frame = new JFrame("VIR Képböngésző - Kozma Kristóf, UQ13LD");
         centerJFrame(frame);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
-        frame.add(new Login());
+        frame.add(new Login(frame, userService));
 
         frame.setVisible(true);
     }

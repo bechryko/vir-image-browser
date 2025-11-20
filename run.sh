@@ -1,1 +1,1 @@
-java -jar target/vir-image-browser-1.0-SNAPSHOT.jar
+java -jar target/vir-image-browser-1.0-SNAPSHOT-shaded.jar

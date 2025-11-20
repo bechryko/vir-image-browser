@@ -3,10 +3,17 @@ package org.example.ui;
 import javax.swing.*;
 import java.awt.*;
 
-public class UiUtilities {
+class UiUtilities {
 
     public static final String FONT_NAME = "Segoe UI";
     public static final int WINDOW_BORDER_SIZE = 30;
+
+    public static void switchMainPanel(JFrame frame, JPanel newPanel) {
+        frame.getContentPane().removeAll();
+        frame.add(newPanel);
+        frame.revalidate();
+        frame.repaint();
+    }
 
     public static void centerElement(JComponent component) {
         component.setAlignmentX(Component.CENTER_ALIGNMENT);

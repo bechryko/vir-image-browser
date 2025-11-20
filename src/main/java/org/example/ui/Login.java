@@ -1,21 +1,27 @@
 package org.example.ui;
 
+import org.example.services.UserService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class Login extends JPanel implements ActionListener {
+public class Login extends JPanel {
 
     private static final int MAX_WIDTH = 450;
     private static final int MAX_HEIGHT = 440;
 
+    private final JFrame frame;
     private JTextField username;
     private JPasswordField password;
     private JButton loginButton;
     private JLabel errorLabel;
 
-    public Login() {
+    private final UserService userService;
+
+    public Login(JFrame frame, UserService userService) {
+        this.frame = frame;
+        this.userService = userService;
+
         UiUtilities.setVerticalLayout(this);
         add(Box.createVerticalGlue());
         add(createMainPanel());
@@ -44,7 +50,7 @@ public class Login extends JPanel implements ActionListener {
         UiUtilities.setFont(loginButton, 20);
         UiUtilities.centerElement(loginButton);
         loginButton.setMaximumSize(new Dimension(200, 35));
-        loginButton.addActionListener(this);
+        loginButton.addActionListener(this::onLoginClicked);
         panel.add(loginButton);
 
         panel.add(Box.createVerticalStrut(10));
@@ -57,6 +63,14 @@ public class Login extends JPanel implements ActionListener {
         panel.add(errorLabel);
 
         return panel;
+    }
+
+    private void onLoginClicked(ActionEvent event) {
+        if(userService.login(username.getText(), new String(password.getPassword()))) {
+            UiUtilities.switchMainPanel(frame, new ImageBrowser(frame, userService));
+        } else {
+            showError("Cannot log in with these credentials!");
+        }
     }
 
     private JPanel createFormPanel() {
@@ -83,15 +97,6 @@ public class Login extends JPanel implements ActionListener {
         formPanel.add(password);
 
         return formPanel;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() != loginButton) {
-            return;
-        }
-
-        System.out.println("Login: " + username.getText() + " - " + password.getText());
-        // TODO
     }
 
     public void showError(String message) {

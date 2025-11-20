@@ -13,10 +13,12 @@ import org.example.db.SQLiteJDBC;
 public class UserService {
 
     private final Subject currentUser;
-    private final SQLiteJDBC jdbc = new SQLiteJDBC();
+    private final SQLiteJDBC jdbc;
     private final PasswordService pwdService;
+    private String username;
 
     public UserService() {
+        jdbc = new SQLiteJDBC();
         pwdService = new DefaultPasswordService();
 
         DBRealm realm = new DBRealm();
@@ -24,6 +26,10 @@ public class UserService {
         SecurityUtils.setSecurityManager(securityManager);
 
         currentUser = SecurityUtils.getSubject();
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public boolean createUser(String username, String password, boolean isAdmin) {
@@ -42,6 +48,7 @@ public class UserService {
 
         try {
             currentUser.login(token);
+            this.username = username;
             return true;
         } catch (UnknownAccountException e) {
             System.err.println("There is no user with username of " + username);
@@ -63,6 +70,7 @@ public class UserService {
         }
 
         currentUser.logout();
+        username = null;
     }
 
     public void givePermission(String username, String permission) {
