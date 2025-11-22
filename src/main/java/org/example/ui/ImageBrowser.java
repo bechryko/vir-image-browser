@@ -3,7 +3,6 @@ package org.example.ui;
 import org.example.services.UserService;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,33 +14,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FilenameUtils;
 
-public class ImageBrowser extends JPanel {
+public class ImageBrowser extends ALoggedInPage {
 
     private static final String IMAGE_DIR = "img";
     private static final int IMAGE_SIZE = 200;
 
-    private final JFrame frame;
-
-    private final UserService userService;
-
     public ImageBrowser(JFrame frame, UserService userService) {
-        this.frame = frame;
-        this.userService = userService;
-
-        UiUtilities.setVerticalLayout(this);
-
-        add(Box.createVerticalStrut(20));
-
-        JLabel welcomeMessage = new JLabel(getWelcomeMessage());
-        UiUtilities.setFont(welcomeMessage, 25);
-        UiUtilities.centerElement(welcomeMessage);
-        add(welcomeMessage);
-
-        add(Box.createVerticalStrut(20));
+        super(frame, userService);
 
         JPanel imagesPanel = new JPanel();
         imagesPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
-        imagesPanel.setPreferredSize(new Dimension(750, 500));
 
         for(String imagePath : collectImagePaths()) {
             imagesPanel.add(createImageDisplayPanel(imagePath));
@@ -51,9 +33,7 @@ public class ImageBrowser extends JPanel {
 
         add(Box.createVerticalStrut(20));
 
-        add(createLogoutButton());
-
-        add(Box.createVerticalStrut(20));
+        addUserActionsBar(SelectedPage.IMAGE_BROWSER);
 
         frame.add(this);
     }
@@ -109,31 +89,6 @@ public class ImageBrowser extends JPanel {
         }
 
         return imagePaths;
-    }
-
-    private JButton createLogoutButton() {
-        JButton logoutButton = new JButton("Logout");
-        UiUtilities.setFont(logoutButton, 15);
-        logoutButton.setMaximumSize(new Dimension(200, 35));
-        logoutButton.addActionListener(this::onLogoutClicked);
-        return logoutButton;
-    }
-
-    private void onLogoutClicked(ActionEvent event) {
-        userService.logout();
-        UiUtilities.switchMainPanel(frame, new Login(frame, userService));
-    }
-
-    private String getWelcomeMessage() {
-        StringBuilder sb = new StringBuilder("Welcome ");
-        sb.append(userService.getUsername());
-        sb.append("!");
-
-        if(userService.isAdmin()) {
-            sb.append(" (Admin user)");
-        }
-
-        return sb.toString();
     }
 
 }
