@@ -1,5 +1,6 @@
 package org.example.ui;
 
+import org.example.services.ImageService;
 import org.example.services.UserService;
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +17,8 @@ public class UserCreation extends ALoggedInPage {
     private JPasswordField confirmPassword;
     private JCheckBox isAdmin;
 
-    public UserCreation(JFrame frame, UserService userService) {
-        super(frame, userService);
+    public UserCreation(JFrame frame, UserService userService, ImageService imageService) {
+        super(frame, userService, imageService);
 
         JLabel title = new JLabel("Create User", JLabel.CENTER);
         UiUtilities.setFont(title, 30, Font.BOLD);

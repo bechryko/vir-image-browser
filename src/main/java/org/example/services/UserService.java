@@ -9,6 +9,9 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.example.db.DBRealm;
 import org.example.db.SQLiteJDBC;
+import org.example.models.UserModel;
+
+import java.util.List;
 
 public class UserService {
 
@@ -87,6 +90,18 @@ public class UserService {
 
     public boolean isAdmin() {
         return currentUser.hasRole("admin");
+    }
+
+    public List<UserModel> listUsers() {
+        return jdbc.listUsers();
+    }
+
+    public List<String> listPermissionsForUser(String username) {
+        if(username == null) {
+            return List.of();
+        }
+
+        return jdbc.listPermissionsForUser(username);
     }
 
     static void main() {

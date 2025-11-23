@@ -1,5 +1,6 @@
 package org.example.ui;
 
+import org.example.services.ImageService;
 import org.example.services.UserService;
 import javax.swing.*;
 import java.awt.*;
@@ -17,10 +18,12 @@ public class Login extends JPanel {
     private JLabel errorLabel;
 
     private final UserService userService;
+    private final ImageService imageService;
 
-    public Login(JFrame frame, UserService userService) {
+    public Login(JFrame frame, UserService userService, ImageService imageService) {
         this.frame = frame;
         this.userService = userService;
+        this.imageService = imageService;
 
         UiUtilities.setVerticalLayout(this);
         add(Box.createVerticalGlue());
@@ -67,7 +70,7 @@ public class Login extends JPanel {
 
     private void onLoginClicked(ActionEvent event) {
         if(userService.login(username.getText(), new String(password.getPassword()))) {
-            UiUtilities.switchMainPanel(frame, new ImageBrowser(frame, userService));
+            UiUtilities.switchMainPanel(frame, new ImageBrowser(frame, userService, imageService));
         } else {
             showError("Cannot log in with these credentials!");
         }

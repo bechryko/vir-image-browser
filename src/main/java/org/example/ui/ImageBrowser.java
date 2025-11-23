@@ -1,31 +1,23 @@
 package org.example.ui;
 
+import org.example.services.ImageService;
 import org.example.services.UserService;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.ImageObserver;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.commons.io.FilenameUtils;
 
 public class ImageBrowser extends ALoggedInPage {
 
-    private static final String IMAGE_DIR = "img";
     private static final int IMAGE_SIZE = 200;
 
-    public ImageBrowser(JFrame frame, UserService userService) {
-        super(frame, userService);
+    public ImageBrowser(JFrame frame, UserService userService, ImageService imageService) {
+        super(frame, userService, imageService);
 
         JPanel imagesPanel = new JPanel();
         imagesPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
 
-        for(String imagePath : collectImagePaths()) {
+        for(String imagePath : imageService.collectImagePaths()) {
             imagesPanel.add(createImageDisplayPanel(imagePath));
         }
 
@@ -69,26 +61,6 @@ public class ImageBrowser extends ALoggedInPage {
         int finalHeight = (int) Math.floor(height * finalScaleRatio);
 
         return image.getScaledInstance(finalWidth, finalHeight, Image.SCALE_SMOOTH);
-    }
-
-    private List<String> collectImagePaths() {
-        List<String> imagePaths = new ArrayList<>();
-
-        try (Stream<Path> paths = Files.walk(Paths.get(IMAGE_DIR))) {
-            imagePaths = paths
-                    .filter(Files::isRegularFile)
-                    .map(Path::toString)
-                    .filter(pathAsString -> {
-                        String extension = FilenameUtils.getExtension(pathAsString);
-                        return userService.hasPermission(extension);
-                    })
-                    .sorted()
-                    .collect(Collectors.toList());
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        }
-
-        return imagePaths;
     }
 
 }
